@@ -30,7 +30,6 @@ class Departamento:
         self.codigo_departamento = codigo_departamento
         self.nombre = nombre
         self.casas = []
-        self.paquetes = []
         self.kcita = kcita
         kcita.agregar_departamento(self)
 
@@ -41,7 +40,15 @@ class Departamento:
         self.casas.append(casa)
 
     def paquetes(self):
-        pass
+        paquetes = []
+        for casa in self.casas:
+            for paquete_de_casa in casa.paquetes_de_casa:
+                paquetes.append(paquete_de_casa)
+            for dormitorio in casa.dormitorios:
+                for paquete_de_dormitorio in dormitorio.paquetes_de_dormitorio:
+                    paquetes.append(paquete_de_dormitorio)
+        return paquetes
+
 
 class Propietario:
 
@@ -114,6 +121,7 @@ class Casa:
         self.codigo_casa = codigo_casa
         self.dormitorios = []
         self.departamento = departamento
+        departamento.agregar_casa(self)
         propietario.agregar_casa(self)
         self.paquetes_de_casa=[]
         self.kcita = kcita
@@ -228,9 +236,15 @@ class Reserva:
         self.paquete = paquete
         self.fecha_de_inicio_de_reserva = fecha_de_inicio_de_reserva
         self.fecha_de_fin_de_reserva = fecha_de_fin_de_reserva
-        self.numero_de_noches = fecha_de_fin_de_reserva - fecha_de_inicio_de_reserva
+        self.numero_de_noches = (fecha_de_fin_de_reserva - fecha_de_inicio_de_reserva).days
         self.precio_total = self.numero_de_noches * paquete.precio_por_noche
         self.kcita = kcita
+        self.dias = []
+        i = 0
+        while i <= self.numero_de_noches:
+            self.dias.append(self.fecha_de_inicio_de_reserva + datetime.timedelta(days = i))
+            i += 1
+
         kcita.agregar_reserva(self)
         paquete.agregar_reserva(self)
 
@@ -300,27 +314,41 @@ class Kcita():
         self.reservas.append(reserva)
 
     def __str__(self):
-            return str(self.nombre)
+        return str(self.nombre)
+
+    def busqueda2(self, codigo_casa, dia_de_entrada, numero_de_noches):
+
+        for casa in self.casas:
+            if casa.codigo_casa == codigo_casa:
+                casaRef = casa
+                break
+
+        paquetes = []
+        for paquete_de_casa in casaRef.paquetes_de_casa:
+            for reserva in paquete_de_casa.reservas:
+                pass
+
 
 
 def test():
 
     kcita = Kcita("Kcita")
 
-    departmento = Departamento(kcita, "Lima")
-    departmento2 = Departamento(kcita, "Arequipa")
-    departmento3 = Departamento(kcita, "Huancayo")
-    print(departmento.codigo_departamento)
-    print(departmento2.codigo_departamento)
-    print(departmento3.codigo_departamento)
+    departamento = Departamento(kcita, "Lima")
+    departamento2 = Departamento(kcita, "Arequipa")
+    departamento3 = Departamento(kcita, "Huancayo")
+    print(departamento.codigo_departamento)
+    print(departamento2.codigo_departamento)
+    print(departamento3.codigo_departamento)
 
     cliente1 = Cliente(kcita, "Renato Palomino", "938618324")
     cliente2 = Cliente(kcita, "Sebastian Ramos", "978762123")
     propietario1 = Propietario(kcita, "paolo_bejarano", "12345", "Paolo Bejarano")
     propietario2 = Propietario(kcita, "carrrdenas", "bea", "Alvaro Cardenas")
-    casa = Casa(kcita, propietario1, departmento, "Av. Parque Las leyendas, San Miguel", 2, 1, 1, 1)
-    casa2 = Casa(kcita, propietario1, departmento, "Av. Reducto, San Miguel", 2, 1, 1, 1)
+    casa = Casa(kcita, propietario1, departamento, "Av. Parque Las leyendas, San Miguel", 2, 1, 1, 1)
+    casa2 = Casa(kcita, propietario1, departamento, "Av. Reducto, San Miguel", 2, 1, 1, 1)
     dormitorio = Dormitorio(kcita, casa2, 1, 2)
+    casa3 = Casa(kcita, propietario2, departamento, "Av. Salaverry, Jesus MAria", 2, 1, 1, 1)
 
     paquete1 = Paquete_de_casa(casa, 30.0, "Casa en alquiler")
     print(paquete1)
@@ -331,6 +359,8 @@ def test():
 
     reserva1 = Reserva(kcita, cliente1, paquete1, datetime.date(2019, 6, 21), datetime.date(2019, 6, 24))
     print(reserva1)
+    print("--------------")
+    print(reserva1.dias)
     print(reserva1.paquete)
     print(paquete1.reservas)
     reserva2 = Reserva(kcita, cliente2, paquete2, datetime.date(2019, 6, 22), datetime.date(2019, 6, 25))
@@ -343,5 +373,14 @@ def test():
     print(kcita.departamentos)
     print(kcita.clientes)
     print(kcita.propietarios)
+
+    print(casa.paquetes_de_casa)
+    print(dormitorio.paquetes_de_dormitorio)
+
+    print(departamento.casas)
+
+    print(departamento.paquetes())
+
+    print(kcita.busqueda2(1, 1, 1))
 
 test()
