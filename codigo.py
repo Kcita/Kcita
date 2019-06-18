@@ -7,7 +7,11 @@ codigo_propietario = 0
 codigo_casa = 0
 codigo_dormitorio = 0
 
+#Libreria para uso de fechas
 import datetime
+#Libreria Tkinter para interfaz gráfica.
+from tkinter import *
+from tkinter import ttk
 
 class Departamento:
 
@@ -21,7 +25,6 @@ class Departamento:
         -------------------------------------------
         Métodos:
         - Agregar_casa
-        - Mostrar_casas
         - Paquetes
     """
 
@@ -43,6 +46,7 @@ class Departamento:
         self.casas.append(casa)
 
     def paquetes(self):
+        """Recibe el objeto Departamento y devuelve un array con todos los paquetes en este departamento"""
         paquetes = []
         for casa in self.casas:
             for paquete_de_casa in casa.paquetes_de_casa:
@@ -51,6 +55,18 @@ class Departamento:
                 for paquete_de_dormitorio in dormitorio.paquetes_de_dormitorio:
                     paquetes.append(paquete_de_dormitorio)
         return paquetes
+
+    def paquetes_disponibles(self):
+        """Recibe el objeto Departamento y devuelve un array con todos los paquetes disponibles en este departamento"""
+        paquetes_disponibles = []
+        for casa in self.casas:
+            if not casa.dado_de_baja:
+                for paquete_de_casa in casa.paquetes_de_casa:
+                    paquetes_disponibles.append(paquete_de_casa)
+                for dormitorio in casa.dormitorios:
+                    for paquete_de_dormitorio in dormitorio.paquetes_de_dormitorio:
+                        paquetes_disponibles.append(paquetes_de_dormitorio)
+        return paquetes_disponibles
 
 class Propietario:
 
@@ -61,6 +77,7 @@ class Propietario:
         - Password: string
         - Casas: array
         - Mail: string
+        - Inicio_sesion: boolean
         -------------------------------------------
         Métodos:
         - Agregar_casa
@@ -68,8 +85,12 @@ class Propietario:
     """
 
     def __init__(self, kcita, usuario, password, nombre):
+        #El codigo_propietario es una variable con scope global.
         global codigo_propietario
+        #Se suma una unidad al código de propietario para generarlo automáticamente.
         codigo_propietario += 1
+        self.codigo_propietario=codigo_propietario
+        #El atributo casas son las casas que tiene este propietario
         self.casas = []
         #El nombre de usuario no distingue entre mayusculas y minusculas, y es un campo unico.
         usuario = usuario.lower()
@@ -82,23 +103,28 @@ class Propietario:
         self.usuario = usuario
         self.password = password
         self.nombre = nombre
-        self.codigo_propietario=codigo_propietario
         self.kcita = kcita
-        self.signed_in = False
+        #El usuario inicia sesión apenas se registre
+        self.sesion_iniciada = True
         kcita.agregar_propietario(self)
-        print("Su usuario es: " + self.usuario)
 
     def __str__():
         return "el usario es " + str(self.usuario)+", el passwoerd es "+ str(self.password)+", el nombre es "+str(self.nombre)
 
     def cambiar_password(self, antiguo_password, nuevo_password):
+        """Recibe el objeto Propietario, un password original y un password nuevo"""
         if self.password == antiguo_password:
             self.password = nuevo_password
+            print("Contraseña cambiada")
+        else:
+            print("Contraseña antigua no coincide.")
 
     def agregar_casa(self, casa):
+        """Recibe el objeto Propietario y el objeto casa. Agrega la casa al atributo Casas del Propietario."""
         self.casas.append(casa)
 
 class Casa:
+
     """Este objeto representa una casa.
         --------------------------------
         Atributos:
@@ -109,6 +135,7 @@ class Casa:
         - Numero_baños: integer
         - Numero_comedores: integer
         - Numero_cocinas: integer
+        - Dado_de_baja: boolean
         Métodos:
         -
         -
@@ -132,6 +159,7 @@ class Casa:
         self.paquetes_de_casa=[]
         self.kcita = kcita
         self.valido = True
+        self.dado_de_baja = False
         kcita.agregar_casa(self)
 
     def __str__(self):
@@ -143,25 +171,29 @@ class Casa:
     def agregar_paquetes_casa(self, paquete_casa):
         self.paquetes_de_casa.append(paquete_casa)
 
+    def dar_de_baja(self):
+        """Recibe el objeto Casa y cambia el atributo Dado_de_baja a True"""
+        self.dado_de_baja = True
+
 
 class Dormitorio:
     """ Este objeto representa una habitación.
         ---------------------------------------------
         Atributos:
-        - Casa: object
-        - Paquetes: array
+        - codigo_dormitorio
+        - casa: object
+        - paquetes: array
         ---------------------------------------------
         Métodos:
         -
     """
 
-    def __init__(self, kcita, casa, numerocamas_sencillas = 0, numerocamas_dobles = 0):
+    def __init__(self, casa, numerocamas_sencillas = 0, numerocamas_dobles = 0):
         global codigo_dormitorio
         codigo_dormitorio += 1
+        self.codigo_dormitorio = codigo_dormitorio
         self.casa = casa
         casa.agregar_dormitorio(self)
-        self.codigo_dormitorio = codigo_dormitorio
-        self.kcita = kcita
         self.numerocamas_dobles = numerocamas_dobles
         self.numerocamas_sencillas = numerocamas_sencillas
         self.paquetes_de_dormitorio = []
@@ -298,6 +330,7 @@ class Kcita:
         self.propietarios = []
         self.clientes = []
         self.departamentos = []
+        self.sesion_iniciada = False
 
     def __str__(self):
         return str(self.nombre)
@@ -363,24 +396,26 @@ class Kcita:
             nombres_de_usuarios_ocupados.append(propietario.usuario)
         return nombres_de_usuarios_ocupados
 
-    def sign_in(self, usuario, password):
+    def iniciar_sesion(self, usuario, password):
         propietario_signed_in = False
         for propietario in self.propietarios:
             if propietario.usuario == usuario and propietario.password == password:
                 propietario.signed_in = True
                 break
+
         return "Login correcto"
 
-    def busqueda1(self, departamento):
-        """Recibe un departamento (objeto) y debe devolver una lista con los paquetes"""
+    def salir_sesion(self, usuario):
+        self.sesion_iniciada = False
 
-    def busqueda2(self, codigo_casa, dia_de_entrada, numero_de_noches):
+    def busqueda(self, codigo_casa, dia_de_entrada, numero_de_noches):
         """Recibe un código de casa (int), un dia de entrada (datetime.date) y un numero de noches (int).
             Devuleve una array de paquetes o un mensaje de error (str)"""
         busqueda_valida = False
 
         for casa in self.casas:
-            if casa.codigo_casa == codigo_casa:
+            #El código de la Casa es único y debe coincidir. Además, la Casa no debe haber sido dado de baja por el Propietario.
+            if casa.codigo_casa == codigo_casa and not casa.dado_de_baja:
                 #Hay una única casa a la cual le corresponde el código
                 casaRef = casa
                 #Si se encuentra una casa, la busqueda es válida
@@ -484,14 +519,24 @@ def test():
     print(departamento.paquetes())
 
     #Búsqueda válida
-    print(kcita.busqueda2(1, datetime.date(2019, 6, 30), 2))
+    print(kcita.busqueda(1, datetime.date(2019, 6, 30), 2))
     #Búsqueda inválida debido a la fecha
-    print(kcita.busqueda2(1, datetime.date(2019, 6, 21), 2))
+    print(kcita.busqueda(1, datetime.date(2019, 6, 21), 2))
     #Búsqueda inválida debido al código de la casa
-    print(kcita.busqueda2(10, datetime.date(2019, 6, 30), 2))
+    print(kcita.busqueda(10, datetime.date(2019, 6, 30), 2))
 
     print(kcita.propietario_signed_in("usuario1", "12345"))
     print(kcita.propietario_signed_in("usuario3", "12345"))
     print(kcita.propietario_signed_in("usuario1", "345"))
 
-test()
+#test()
+
+def interfaz():
+    gui = Tk()
+    gui.geometry("1250x750")
+    gui.title("Kcita: Alquileres de casas y dormitorios")
+    ttk.Button(gui, text="Iniciar sesión").grid()
+    ttk.Button(gui, text="Resgistrarme").grid()
+    gui.mainloop()
+
+interfaz()
