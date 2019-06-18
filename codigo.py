@@ -6,6 +6,7 @@ codigo_cliente = 0
 codigo_propietario = 0
 codigo_casa = 0
 codigo_dormitorio = 0
+codigo_pago = 0
 
 #Libreria para uso de fechas
 import datetime
@@ -29,7 +30,7 @@ class Departamento:
     """
 
     def __init__(self, kcita, nombre = ""):
-        """Creacion de un departamento nuevo"""
+        """Crea un departamento"""
         global codigo_departamento
         codigo_departamento += 1
         self.codigo_departamento = codigo_departamento
@@ -39,6 +40,7 @@ class Departamento:
         kcita.agregar_departamento(self)
 
     def __str__(self):
+        """Devuelve una representación de caractéres de self"""
         return "El codigo de departamento es " + str(self.codigo_dormitorio)+", el nombres es "+str(self.nombre)
 
     def agregar_casa(self, casa):
@@ -77,7 +79,7 @@ class Propietario:
         - Password: string
         - Casas: array
         - Mail: string
-        - Inicio_sesion: boolean
+        - sesion_iniciada: boolean
         -------------------------------------------
         Métodos:
         - Agregar_casa
@@ -85,30 +87,30 @@ class Propietario:
     """
 
     def __init__(self, kcita, usuario, password, nombre):
+        """Crea un propietario"""
         #El codigo_propietario es una variable con scope global.
         global codigo_propietario
         #Se suma una unidad al código de propietario para generarlo automáticamente.
         codigo_propietario += 1
-        self.codigo_propietario=codigo_propietario
+        self.codigo_propietario = codigo_propietario
         #El atributo casas son las casas que tiene este propietario
         self.casas = []
         #El nombre de usuario no distingue entre mayusculas y minusculas, y es un campo unico.
         usuario = usuario.lower()
-        #Un nombre de usuario es válido si no se ha creado uno igual anteriormente.
-        nombres_de_usuarios_ocupados = kcita.nombres_de_usuarios_ocupados()
         #Mientras el nombre de usuario se siga repitiendo, se pedirá que se intente con otro nombre
-        while usuario in nombres_de_usuarios_ocupados:
+        while usuario in kcita.nombres_de_usuarios_ocupados():
+            #Un nombre de usuario es válido si no se ha creado uno igual anteriormente.
             usuario = input("Nombre de usuario ocupado. Pruebe con otro nombre de usuario: ")
             usuario = usuario.lower()
         self.usuario = usuario
         self.password = password
         self.nombre = nombre
         self.kcita = kcita
-        #El usuario inicia sesión apenas se registre
-        self.sesion_iniciada = True
         kcita.agregar_propietario(self)
+        self.sesion_iniciada = False
 
     def __str__():
+        """Devuelve una representación de caractéres de self"""
         return "el usario es " + str(self.usuario)+", el passwoerd es "+ str(self.password)+", el nombre es "+str(self.nombre)
 
     def cambiar_password(self, antiguo_password, nuevo_password):
@@ -122,6 +124,14 @@ class Propietario:
     def agregar_casa(self, casa):
         """Recibe el objeto Propietario y el objeto casa. Agrega la casa al atributo Casas del Propietario."""
         self.casas.append(casa)
+
+    def inicio_sesion(self):
+        """Se inicia la sesión de este propietario"""
+        self.sesion_iniciada = True
+
+    def cerrar_sesion(self):
+        """Se cierra la sesión de este propietario"""
+        self.sesion_iniciada = False
 
 class Casa:
 
@@ -145,6 +155,7 @@ class Casa:
     """
 
     def __init__(self,propietario, departamento, direccion = "", numero_dormitorios = 0, numero_banos = 0, numero_cocinas = 0, numero_comedores = 0, numero_plazas_garaje = 0, descripcion_general = ""):
+        """Crea una casa"""
         #La variable codigo casa es una variable global
         global codigo_casa
         #Se suma una unidad al codigo_casa para que este código sea único
@@ -170,19 +181,21 @@ class Casa:
         #Una casa tiene varios paquetes
         self.paquetes_de_casa = []
         #Una casa es válida si cuenta con al menos una cocina, 3 habitaciones y 2 baños
-        if numero_dormitorios <= 3 and numero_cocinas <= 1 and numero_banos <= 2:
-            raise ValueError
+        """if numero_dormitorios <= 3 and numero_cocinas <= 1 and numero_banos <= 2:
+            raise ValueError"""
         self.valido = True
         self.dado_de_baja = False
 
     def __str__(self):
+        """Devuelve una representación de caractéres de self"""
         return "Codigo de casa" + str(self.codigo_casa)+ ", " + "la direccion es " + str(self.direccion)+ ", " + "el numero de dormitorios es "+ str(self.numero_dormitorios)+ ", " + "el numero de cocinas es " + str(self.numero_cocinas) + ", "+ "el numero de comedores es " + str(self.numero_comedores)+ " y el numero de baños es "+str(self.numero_banos)
 
     def agregar_dormitorio(self, dormitorio):
         self.dormitorios.append(dormitorio)
 
-    def agregar_paquetes_casa(self, paquete_casa):
-        self.paquetes_de_casa.append(paquete_casa)
+    def agregar_paquete_de_casa(self, paquete_de_casa):
+        """Agrega un paquete de casa a la casa"""
+        self.paquetes_de_casa.append(paquete_de_casa)
 
     def dar_de_baja(self):
         """Recibe el objeto Casa y cambia el atributo Dado_de_baja a True"""
@@ -203,6 +216,7 @@ class Dormitorio:
     """
 
     def __init__(self, casa, numero_camas_sencillas = 0, numero_camas_dobles = 0, tiene_bano_propio = False):
+        """Crea un dormitorio"""
         #La varibale codigo_dormitorio es una variable global
         global codigo_dormitorio
         #Se suma un dígito al codigo_dormitorio para que este sea un código único por instancia
@@ -211,17 +225,18 @@ class Dormitorio:
         #Un dormitorio le pertenece a una única casa
         self.casa = casa
         casa.agregar_dormitorio(self)
-        self.numero_camas_dobles = numerocamas_dobles
-        self.numero_camas_sencillas = numerocamas_sencillas
+        self.numero_camas_dobles = numero_camas_dobles
+        self.numero_camas_sencillas = numero_camas_sencillas
         self.tiene_bano_propio = tiene_bano_propio
         #Un dormitorio puede alquilarse por paquetes
         self.paquetes_de_dormitorio = []
 
     def __str__(self):
-        return "codigo_dormitorio" + str(self.codigo_dormitorio)+ ", numerocamas_dobles: " + str(self.numerocamas_dobles) + ", numerocamas_sencillas: " + str(self.numerocamas_sencillas) + ", codigo_casa: " + str(self.casa.codigo_casa)
+        """Devuelve una representación de caractéres de self"""
+        return "codigo_dormitorio" + str(self.codigo_dormitorio)+ ", numero_de_camas_dobles: " + str(self.numero_camas_dobles) + ", numerocamas_sencillas: " + str(self.numero_camas_sencillas) + ", codigo_casa: " + str(self.casa.codigo_casa)
 
-    def agregar_paquete_dormitorio(self, dormitorio):
-        self.paquetes_de_dormitorio.append(dormitorio)
+    def agregar_paquete_de_dormitorio(self, paquete_de_dormitorio):
+        self.paquetes_de_dormitorio.append(paquete_de_dormitorio)
 
     def reservas(self):
         pass
@@ -235,7 +250,7 @@ class Paquete:
         -------------------------------------------
         Atributos:
         - codigo_paquete: integer
-        - precio_por_noche: float
+        - precio_por_dia: float
         - minimo_de_dias: integer
         - titulo: integer
         -------------------------------------------
@@ -243,7 +258,8 @@ class Paquete:
         - Propietario: object
     """
 
-    def __init__(self, tipo, precio_por_noche, numero_de_dias, titulo):
+    def __init__(self, tipo, precio_por_dia, numero_de_dias, titulo):
+        """Crea un paquete"""
         #La variabel codigo_paquete es global
         global codigo_paquete
         #Se suma una unidad al codigo_paquete para que este código sea único
@@ -251,8 +267,8 @@ class Paquete:
         self.codigo_paquete = codigo_paquete
         #Los paquetes son de dos tipos: Alquiler de habitación en casa o Alquiler de casa completa
         self.tipo = tipo
-        #Es el precio por noche
-        self.precio_por_noche = precio_por_noche
+        #Es el precio por alquiler en un dia
+        self.precio_por_dia = precio_por_dia
         #Es el numero de dias por el que se alquila la habitacion o casa en este paquete
         self.numero_de_dias = numero_de_dias
         #Es el título del anuncio que pone el propietario
@@ -261,27 +277,37 @@ class Paquete:
         self.reservas = []
 
     def __str__(self):
-        return "codigo_paquete: " + str(self.codigo_paquete) + ", tipo: "+ str(self.tipo) + ", precio_por_noche: " + str(self.precio_por_noche) + ", descripcion:" + self.descripcion
-
+        """Devuelve una representación de caractéres de self"""
+        return "codigo_paquete: " + str(self.codigo_paquete) + ", tipo: "+ str(self.tipo) + ", precio_por_dia: " + str(self.precio_por_dia) + ", titulo:" + self.titulo
     def agregar_reserva(self, reserva):
         """Recibe el objeto Paquete y el objeto Reserva. Añade la Reserva al atributo reservas"""
         self.reservas.append(reserva)
 
+    def setprecio_por_dia(self, precio_por_dia):
+        """Asume precio_por_dia como un float. Establece un nuevo precio por dia del paquete."""
+        self.precio_por_dia = precio_por_dia
+
+    def setnumero_de_dias(self, numero_de_dias):
+        """Asume numero_de_dias como un integer. Establece un nuevo numero de dias del paquete."""
+        self.numero_de_dias = numero_de_dias
+
 class Paquete_de_casa(Paquete):
     """Representa un paquete de alquiler de una casa completa"""
     def __init__(self, casa, precio_por_noche, numero_de_dias, titulo):
+        """Crea un paquete de casa"""
         #Un paquete de casa le pertence a una única casa
         self.casa = casa
         super().__init__("Casa completa", precio_por_noche, numero_de_dias, titulo)
-        casa.agregar_paquetes_casa(self)
+        casa.agregar_paquete_de_casa(self)
 
 class Paquete_de_dormitorio(Paquete):
     """Representa un paquete de alquiler de un dormitorio en una casa"""
     def __init__(self, dormitorio, precio_por_noche, numero_de_dias, titulo):
+        """Crea un paquete de dormitorio"""
         #Un paquete de dormitorio le pertenece a un único dormitorio.
         self.dormitorio = dormitorio
         super().__init__("Habitación", precio_por_noche, numero_de_dias, titulo)
-        dormitorio.agregar_paquetes_dormitorio(self)
+        dormitorio.agregar_paquete_de_dormitorio(self)
 
 class Reserva:
 
@@ -293,7 +319,7 @@ class Reserva:
         - fecha_de_creacion: datetime
         - fecha_de_inicio_de_reserva: datetime
         - fecha_de_fin_de_reserva: datetime
-        - precio: float
+        - precio_total: float
         - anulado: boolean
         - pagos: array
         ----------------------------------------------------------
@@ -301,31 +327,39 @@ class Reserva:
         - Casa
         - Habitacion
         - numero_de_noches
+        - monto_cobrado
         """
 
     def __init__(self, cliente, paquete, fecha_de_creacion, fecha_de_inicio_de_reserva):
+        """Crea una reserva"""
         global codigo_reserva
         codigo_reserva += 1
         self.codigo_reserva = codigo_reserva
         self.cliente = cliente
         self.paquete = paquete
         self.fecha_de_inicio_de_reserva = fecha_de_inicio_de_reserva
-        self.fecha_de_fin_de_reserva = fecha_de_fin_de_reserva
-        self.numero_de_noches = (fecha_de_fin_de_reserva - fecha_de_inicio_de_reserva).days
-        self.precio_total = self.numero_de_noches * paquete.precio_por_noche
-        self.kcita = kcita
+        self.fecha_de_fin_de_reserva = fecha_de_inicio_de_reserva + datetime.timedelta(days = paquete.numero_de_dias - 1)
+        self.numero_de_noches = (self.fecha_de_fin_de_reserva - self.fecha_de_inicio_de_reserva).days
+        self.precio_total = paquete.numero_de_dias * paquete.precio_por_dia
         self.dias = []
-        self.estado = "En proceso"
         for i in range(0, self.numero_de_noches + 1):
             self.dias.append(self.fecha_de_inicio_de_reserva + datetime.timedelta(days = i))
         paquete.agregar_reserva(self)
         self.pagos = []
 
     def __str__(self):
-        return "codigo_reserva: " + str(self.codigo_reserva) + ", codigo_paquete:" +str(self.paquete.codigo_paquete) + ", estado: " + self.estado + ", fecha_de_inicio_de_reserva: " + str(self.fecha_de_inicio_de_reserva) + ", fecha_de_fin_de_reserva:" + str(self.fecha_de_fin_de_reserva) + ", numero_de_noches: " + str(self.numero_de_noches) + ", precio_total: " + str(self.precio_total)
+        """Devuelve una representación de caractéres de self"""
+        return "codigo_reserva: " + str(self.codigo_reserva) + ", codigo_paquete:" +str(self.paquete.codigo_paquete) + ", estado: " + ", fecha_de_inicio_de_reserva: " + str(self.fecha_de_inicio_de_reserva) + ", fecha_de_fin_de_reserva:" + str(self.fecha_de_fin_de_reserva) + ", numero_de_noches: " + str(self.numero_de_noches) + ", precio_total: " + str(self.precio_total)
 
     def agregar_pago(self, pago):
         self.pagos.append(pago)
+
+    def monto_cobrado(self):
+        """Calcula el monto cobrado a la actualidad"""
+        monto_cobrado = 0
+        for pago in self.pagos:
+            monto_cobrado += pago.monto
+        return monto_cobrado
 
 class Cliente:
 
@@ -341,6 +375,7 @@ class Cliente:
         -
         """
     def __init__(self, kcita, nombre, celular, mail):
+        """Crea un cliente"""
         global codigo_cliente
         codigo_cliente += 1
         self.codigo_cliente = codigo_cliente
@@ -355,37 +390,56 @@ class Cliente:
         self.reservas.append(reserva)
 
     def __str__(self):
+        """Devuelve una representación de caractéres de self"""
         return "cliente:"+str(self.nombre)+"/ celular"+str(self.celular)
 
 class Pago:
     """Representa el pago que hace un cliente a un propietario por la reserva"""
-    def __init__(self, reserva, fecha, monto):
+    def __init__(self, reserva, monto, fecha = datetime.date.today()):
+        """Crea un pago"""
+        #El codigo_pago es una variable global
+        global codigo_pago
+        codigo_pago += 1
+        self.codigo_pago = codigo_pago
         #Un pago corresponde a una única reserva
         self.reserva = reserva
         #Una reserva tiene varios pagos:
         reserva.agregar_pago(self)
-        #Un pago se hace en una fecha en específico
-        self.fecha = fecha
         #Un pago debe tener un monto específico
         self.monto = monto
         #Se debe verificar que el pago es un número mayor a cero
         while monto < 0:
             monto = float(input("Cantidad inválida, introduzca un número mayor a cero: "))
             self.monto = monto
+        #Un pago se hace en una fecha en específico
+        self.fecha = fecha
 
     def __str__(self):
-        pass
+        """Devuelve una representación de caractéres de self"""
+        return "codigo_pago: " + str(self.codigo_pago) + ", codigo_reserva: " + str(self.reserva.codigo_reserva) + ", monto: " + str(self.monto) + ", fecha: " + str(self.fecha)
 
 class Kcita:
 
-    """Representa la compañia de gestión de reserva de alquileres
+    """Representa la plataforma de gestión de reserva de alquileres
         Atributos:
         - Propietarios
         - Clientes
         - Departamentos
+        -------------------------------------------
+        Métodos:
+        - agregar_propietario
+        - agregar_cliente
+        - agregar_departamento
+        - reservas
+        - casas
+        - dormitorios
+        - paquetes
+        - nombres_de_usuarios_ocupados
+        - iniciar_sesion
     """
 
     def __init__(self, nombre):
+        """Crea una Kcita"""
         self.nombre = nombre
         #En el sistema hay varios propietarios
         self.propietarios = []
@@ -397,6 +451,7 @@ class Kcita:
         self.sesion_iniciada = False
 
     def __str__(self):
+        """Devuelve una representación de caractéres de self"""
         return str(self.nombre)
 
     def agregar_propietario(self, propietario):
@@ -464,20 +519,22 @@ class Kcita:
         return nombres_de_usuarios_ocupados
 
     def iniciar_sesion(self, usuario, password):
-        """Recibe Kcita de objeto, usuario de string y password de string. Si el usuario y password es correcto, inicia una sesión."""
+        """Recibe Kcita de objeto, usuario de string y password de string.
+            Si el usuario y password es correcto, se inicia una sesión en el sistema."""
         if not self.sesion_iniciada:
             for propietario in self.propietarios:
                 if propietario.usuario == usuario and propietario.password == password:
-                    propietario.sesion_iniciada = True
+                    propietario.inicio_sesion()
                     self.sesion_iniciada = True
+                    print("Inicio de sesión satisfactorio")
             if not self.sesion_iniciada:
                 print("Nombre de usuario y contraseña no coinciden.")
         else:
             print("Ya tiene una sesión abierta")
 
-    def salir_sesion(self, propietario):
+    def salir_sesion(self):
+        """Cierra la sesión en el sistema"""
         self.sesion_iniciada = False
-        propietario.sesion_iniciada = False
 
     def busqueda(self, codigo_casa, dia_de_entrada, numero_de_noches):
         """Recibe un código de casa (int), un dia de entrada (datetime.date) y un numero de noches (int).
@@ -485,7 +542,7 @@ class Kcita:
 
         busqueda_valida = False
 
-        for casa in self.casas:
+        for casa in self.casas():
             #El código de la Casa es único y debe coincidir. Además, la Casa no debe haber sido dado de baja por el Propietario.
             if casa.codigo_casa == codigo_casa and not casa.dado_de_baja:
                 #Hay una única casa a la cual le corresponde el código
@@ -557,26 +614,24 @@ def test():
 
     #Creación de casas y dormitorios
     casa1 = Casa(propietario1, departamento, "Av. Parque Las leyendas, San Miguel", 1, 1, 1, 1, 1)
-    dormitorio11 = Dormitorio(casa2, 1, 2)
-    dormitorio12 = Dormitorio(casa2, 1, 2)
-    dormitorio13 = Dormitorio(casa2, 1, 2)
+    dormitorio11 = Dormitorio(casa1, 1, 2)
+    dormitorio12 = Dormitorio(casa1, 1, 2)
+    dormitorio13 = Dormitorio(casa1, 1, 2)
     casa2 = Casa(propietario1, departamento, "Av. Reducto, Miraflores", 2, 1, 1, 1)
     dormitorio21 = Dormitorio(casa2, 1, 2)
     dormitorio22 = Dormitorio(casa2, 1, 2)
     dormitorio23 = Dormitorio(casa2, 1, 2)
     casa3 = Casa(propietario2, departamento, "Av. Salaverry, Jesus MAria", 2, 1, 1, 1)
-    dormitorio31 = Dormitorio(casa2, 1, 2)
-    dormitorio32 = Dormitorio(casa2, 1, 2)
-    dormitorio32 = Dormitorio(casa2, 1, 2)
+    dormitorio31 = Dormitorio(casa3, 1, 2)
+    dormitorio32 = Dormitorio(casa3, 1, 2)
+    dormitorio32 = Dormitorio(casa3, 1, 2)
 
 
-    #Creación de dormitorios
-
-    dormitorio = Dormitorio(casa2, 1, 2)
-    paquete1 = Paquete_de_casa(casa, 30.0, "Casa en alquiler")
-    paquete2 = Paquete_de_dormitorio(dormitorio, 15.0, "Departamento en alquiler")
-    reserva1 = Reserva(cliente1, paquete1, datetime.date(2019, 6, 21), datetime.date(2019, 6, 24))
-    reserva2 = Reserva(cliente2, paquete2, datetime.date(2019, 6, 22), datetime.date(2019, 6, 25))
+    #Creación de paquetes
+    paquete1 = Paquete_de_casa(casa1, 30.0, 3, "Casa en alquiler")
+    paquete2 = Paquete_de_dormitorio(dormitorio21, 15.0, 4, "Departamento en alquiler")
+    reserva1 = Reserva(cliente1, paquete1, datetime.date(2019, 6, 19), datetime.date(2019, 6, 21))
+    reserva2 = Reserva(cliente2, paquete2, datetime.date(2019, 6, 18), datetime.date(2019, 6, 22))
 
     #Test de métodos str
     print(paquete1)
@@ -585,7 +640,6 @@ def test():
     print(paquete2.dormitorio)
 
     print(reserva1)
-    print("--------------")
     print(reserva1.dias)
     print(reserva1.paquete)
     print(paquete1.reservas)
@@ -596,8 +650,8 @@ def test():
     print(kcita.clientes)
     print(kcita.propietarios)
 
-    print(casa.paquetes_de_casa)
-    print(dormitorio.paquetes_de_dormitorio)
+    print(casa1.paquetes_de_casa)
+    print(dormitorio21.paquetes_de_dormitorio)
 
     print(departamento.casas)
 
@@ -610,13 +664,15 @@ def test():
     #Búsqueda inválida debido al código de la casa
     print(kcita.busqueda(10, datetime.date(2019, 6, 30), 2))
 
-    print(kcita.propietario_signed_in("usuario1", "12345"))
-    print(kcita.propietario_signed_in("usuario3", "12345"))
-    print(kcita.propietario_signed_in("usuario1", "345"))
+    #print(kcita.propietario_signed_in("usuario1", "12345"))
+    #print(kcita.propietario_signed_in("usuario3", "12345"))
+    #print(kcita.propietario_signed_in("usuario1", "345"))
 
 test()
 
-def interfaz():
+
+
+def GUI():
     gui = Tk()
     gui.geometry("1250x750")
     gui.title("Kcita: Alquileres de casas y dormitorios")
@@ -624,4 +680,8 @@ def interfaz():
     ttk.Button(gui, text="Resgistrarme").grid()
     gui.mainloop()
 
-#interfaz()
+def CLI():
+    pass
+
+test()
+
