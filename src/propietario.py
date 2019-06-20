@@ -7,10 +7,13 @@ class Propietario:
     """Este objeto representa un propietario que pone su o sus casas en alquiler.
         -------------------------------------------
         Atributos:
-        - Usuario: string
-        - Password: string
-        - Casas: array
-        - Mail: string
+        - codigo_propietario: integer
+        - usuario: string
+        - password: string
+        - nombre: string
+        - kcita: object
+        - casas: array
+        - mail: string
         - sesion_iniciada: boolean
         -------------------------------------------
         Métodos:
@@ -47,7 +50,9 @@ class Propietario:
 
     def cambiar_password(self, antiguo_password, nuevo_password):
         """Recibe el objeto Propietario, un password original y un password nuevo"""
+        #se debe verificar que la contraseña antigua es igual a la contraseña original
         if self.password == antiguo_password:
+            #si se cumple, se cambia la contraseña
             self.password = nuevo_password
             print("Contraseña cambiada")
         else:
