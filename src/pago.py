@@ -5,7 +5,14 @@ codigo_pago = 0
 import datetime
 
 class Pago:
-    """Representa el pago que hace un cliente a un propietario por la reserva"""
+    """Representa el pago que hace un cliente a un propietario por la reserva.
+        ---------------------------------------------
+        Atributos:
+        - codigo_pago: integer
+        - reserva: object
+        - monto: float
+        - fecha: date
+    """
     def __init__(self, reserva, monto, fecha = datetime.date.today()):
         """Crea un pago"""
         #El codigo_pago es una variable global
