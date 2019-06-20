@@ -11,6 +11,30 @@ from src.pago import Pago
 
 import datetime
 
+from tqdm import tqdm
+from pyfiglet import figlet_format
+import time
+
+def CLI():
+
+    kcita = Kcita("Kcita")
+
+    #Creacion de departamentos
+    departamento = Departamento(kcita, "Lima")
+    departamento2 = Departamento(kcita, "Arequipa")
+
+    while True:
+        print(figlet_format(kcita.nombre))
+        print("Bienvenido a Kcita. Desde aquí podrás alquilar un inmueble o poner en alquiler tu inmueble.")
+        print("Presiona Ctrl + C para salir en cualquier momento.")
+        opcion = int(input("Escribe (1) si deseas alquilar un inmueble o (2) si deseas poner tu inmueble en alquiler\n"))
+        while not(opcion == 1 or opcion == 2):
+            opcion = int(input("Opción incorrecta. Escribe (1) si deseas alquilar un inmueble o (2) si deseas poner tu inmueble en alquiler\n"))
+        if opcion == 1:
+            for i in tqdm(range(100)):
+                time.sleep(1)
+        break
+
 def test():
 
     #Creación de objecto Kcita
@@ -85,8 +109,13 @@ def test():
     #Búsqueda inválida debido al código de la casa
     print(kcita.busqueda(10, datetime.date(2019, 6, 30), 2))
 
+    print(reserva1.precio_total)
+    pago1 = Pago(reserva1, 20.5)
+    pago2 = Pago(reserva1, 20)
+    print(reserva1.monto_cobrado())
+
     #print(kcita.propietario_signed_in("usuario1", "12345"))
     #print(kcita.propietario_signed_in("usuario3", "12345"))
     #print(kcita.propietario_signed_in("usuario1", "345"))
 
-test()
+CLI()
