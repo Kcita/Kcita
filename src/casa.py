@@ -18,9 +18,14 @@ class Casa:
         - numero_plazas_garaje: integer
         - descripcion_general: string
         - dado_de_baja: boolean
+        - paquetes_de_casa: array
         - valido: boolean
         - dormitorios: array
         Métodos:
+        - agregar_dormitorio
+        - agregar_paquete_de_casa
+        - dar_de_baja
+        - paquetes
     """
 
     def __init__(self,propietario, departamento, direccion = "", numero_dormitorios = 0, numero_banos = 0, numero_cocinas = 0, numero_comedores = 0, numero_plazas_garaje = 0, descripcion_general = ""):
@@ -69,3 +74,13 @@ class Casa:
     def dar_de_baja(self):
         """Recibe el objeto Casa y cambia el atributo Dado_de_baja a True"""
         self.dado_de_baja = True
+
+    def paquetes(self):
+        """Devuelve los paquetes de casa y de dormitorio"""
+        paquetes = []
+        for paquete_de_casa in self.paquetes_de_casa:
+            paquetes.append(paquete)
+        for dormitorio in self.dormitorios:
+            for paquete_de_dormitorio in self.paquete_de_dormitorio:
+                paquetes.append(paquete_de_dormitorio)
+        return paquetes
