@@ -12,7 +12,9 @@ class Dormitorio:
         - paquetes: array
         ---------------------------------------------
         Métodos:
-        - agregar_paquete_dormitorio
+        - agregar_paquete_dormitorio(paquete_de_dormitorio)
+        - reservas
+        - propietario
     """
 
     def __init__(self, casa, numero_camas_sencillas = 0, numero_camas_dobles = 0, tiene_bano_propio = False):
@@ -39,7 +41,13 @@ class Dormitorio:
         self.paquetes_de_dormitorio.append(paquete_de_dormitorio)
 
     def reservas(self):
-        pass
+        """Devuelve todas las reservas para un dormitorio"""
+        reservas = []
+        for paquete_de_dormitorio in self.paquetes_de_dormitorio:
+            for reserva in paquete_de_dormitorio.reservas:
+                reservas.append(reserva)
+        return reservas
 
-    def reservas_programadas(self):
-        pass
+    def propietario(self):
+        """Devuelve el propietario de la casa donde se encuentra el dormitorio"""
+        return self.casa.propietario
