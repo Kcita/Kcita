@@ -13,7 +13,7 @@ class Paquete:
         - titulo: integer
         -------------------------------------------
         Métodos:
-        - Propietario: object
+        - 
     """
 
     def __init__(self, tipo, precio_por_dia, numero_de_dias, titulo):
