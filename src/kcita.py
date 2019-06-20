@@ -120,9 +120,27 @@ class Kcita:
         """Cierra la sesión en el sistema"""
         self.sesion_iniciada = False
 
+    def busqueda_por_codigo_de_casa(self, codigo_casa):
+        """Recibe un código de casa (int) y devuelve los paquetes que hay en esta casa"""
+        #Se asume que la busqueda es inválida
+        busqueda_valida = False
+
+        for casa in self.casas():
+            #El código de la Casa es único y debe coincidir. Además, la Casa no debe haber sido dado de baja por el Propietario.
+            if casa.codigo_casa == codigo_casa and not casa.dado_de_baja:
+                #Hay una única casa a la cual le corresponde el código
+                casaRef = casa
+                #Si se encuentra una casa, la busqueda es válida
+                busqueda_valida += True
+                break
+        if busqueda_valida:
+            return casa.paquetes()
+        else:
+            print("Ninguna casa coincide con este código o la casa fue dada de baja.")
+
     def busqueda(self, codigo_casa, dia_de_entrada, numero_de_noches):
         """Recibe un código de casa (int), un dia de entrada (datetime.date) y un numero de noches (int).
-            Devuleve una array de paquetes o un mensaje de error (str)"""
+            Devuelve un array de paquetes o un mensaje de error (str)"""
 
         busqueda_valida = False
 
@@ -136,7 +154,7 @@ class Kcita:
                 break
 
         if not busqueda_valida:
-            return "Código de casa no encontrado"
+            return "Ninguna casa coincide con este código o la casa fue dada de baja."
         else:
             paquetes_disponibles = []
             for paquete_de_casa in casaRef.paquetes_de_casa:
