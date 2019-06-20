@@ -7,14 +7,15 @@ class Departamento:
     """Este objeto representa un departamento.
         -------------------------------------------
         Atributos:
-        - Codigo_departamento: integer
-        - Nombre: string
-        - Casas: array
-        - Kcita: objectDepartamento
+        - codigo_departamento: integer
+        - nombre: string
+        - casas: array
+        - kcita: object
         -------------------------------------------
         Métodos:
-        - Agregar_casa
-        - Paquetes
+        - agregar_casa(casa)
+        - paquetes
+        - paquetes_disponibles
     """
 
     def __init__(self, kcita, nombre = ""):
@@ -25,7 +26,7 @@ class Departamento:
         self.nombre = nombre
         self.casas = []
         self.kcita = kcita
-        #kcita.agregar_departamento(self)
+        kcita.agregar_departamento(self)
 
     def __str__(self):
         """Devuelve una representación de caractéres de self"""
