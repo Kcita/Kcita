@@ -21,9 +21,11 @@ class Casa:
         - paquetes_de_casa: array
         - valido: boolean
         - dormitorios: array
+        - cocinas: array
         Métodos:
-        - agregar_dormitorio
-        - agregar_paquete_de_casa
+        - agregar_dormitorio(dormitorio)
+        - agregar_cocina(cocina)
+        - agregar_paquete_de_casa(paquete_de_casa)
         - dar_de_baja
         - paquetes
     """
@@ -65,7 +67,12 @@ class Casa:
         return "Codigo de casa" + str(self.codigo_casa)+ ", " + "la direccion es " + str(self.direccion)+ ", " + "el numero de dormitorios es "+ str(self.numero_dormitorios)+ ", " + "el numero de cocinas es " + str(self.numero_cocinas) + ", "+ "el numero de comedores es " + str(self.numero_comedores)+ " y el numero de baños es "+str(self.numero_banos)
 
     def agregar_dormitorio(self, dormitorio):
+        """Agrega un dormitorio a la casa"""
         self.dormitorios.append(dormitorio)
+
+    def agregar_cocina(self, cocina):
+        """Agregar una cocina a la casa"""
+        self.cocinas.append(cocina)
 
     def agregar_paquete_de_casa(self, paquete_de_casa):
         """Agrega un paquete de casa a la casa"""
