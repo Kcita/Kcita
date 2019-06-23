@@ -75,3 +75,7 @@ class Reserva:
     def pagado(self):
         """Devuelve True si la reserva ha sido pagada, devuelve False caso contrario"""
         if self.monto_cobrado() == self.precio_total:
+            return True
+        else:
+            return False
+        
