@@ -118,4 +118,4 @@ def test():
     #print(kcita.propietario_signed_in("usuario3", "12345"))
     #print(kcita.propietario_signed_in("usuario1", "345"))
 
-CLI()
+test()
