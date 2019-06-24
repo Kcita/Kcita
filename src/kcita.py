@@ -104,21 +104,27 @@ class Kcita:
 
     def iniciar_sesion(self, usuario, password):
         """Recibe Kcita de objeto, usuario de string y password de string.
-            Si el usuario y password es correcto, se inicia una sesión en el sistema."""
+            Si el usuario y password es correcto, se inicia una sesión en el sistema y devuelve True."""
         if not self.sesion_iniciada:
             for propietario in self.propietarios:
                 if propietario.usuario == usuario and propietario.password == password:
                     propietario.inicio_sesion()
                     self.sesion_iniciada = True
                     print("Inicio de sesión satisfactorio")
+                    return True
             if not self.sesion_iniciada:
                 print("Nombre de usuario y contraseña no coinciden.")
+                return False
         else:
             print("Ya tiene una sesión abierta")
+            return False
 
     def salir_sesion(self):
-        """Cierra la sesión en el sistema"""
+        """Cierra la sesión en el sistema y de cualquier usuario que haya ingresado al sistema"""
         self.sesion_iniciada = False
+        for propietario in self.propietarios:
+            propietario.sesion_iniciada = False
+
 
     def busqueda_por_codigo_de_casa(self, codigo_casa):
         """Recibe un código de casa (int) y devuelve los paquetes que hay en esta casa"""
@@ -137,6 +143,31 @@ class Kcita:
             return casa.paquetes()
         else:
             print("Ninguna casa coincide con este código o la casa fue dada de baja.")
+
+    def busqueda_de_departamento_por_codigo(self, codigo_departamento):
+        for departamento in self.departamentos:
+            if departamento.codigo_departamento == codigo_departamento:
+                return departamento
+
+    def busqueda_de_propietario_por_usuario(self, usuario):
+        for propietario in self.propietarios:
+            if propietario.usuario == usuario:
+                return propietario
+
+    def busqueda_de_cliente_por_celular(self, celular):
+        for cliente in self.clientes:
+            if cliente.celular == celular:
+                return cliente
+
+    def busqueda_de_casa_por_codigo(self, codigo_casa):
+        for casa in self.casas():
+            if casa.codigo_casa == codigo_casa:
+                return casa
+
+    def busqueda_de_paquete_por_codigo(self, codigo_paquete):
+        for paquete in self.paquetes():
+            if paquete.codigo_paquete == codigo_paquete:
+                return paquete
 
     def busqueda(self, codigo_casa, dia_de_entrada, numero_de_noches):
         """Recibe un código de casa (int), un dia de entrada (datetime.date) y un numero de noches (int).
@@ -190,3 +221,25 @@ class Kcita:
             return "No se encontraron paquetes disponibles con esa fecha. Intente cambiando de fecha o número de noches"
         else:
             return paquetes_disponibles
+
+    def busqueda_por_atributo(atributo, valor):
+
+        """Recibe un atributo de la casa y su valor. Devuelve los paquetes que cumplen con este atributo"""
+
+        paquetes = []
+
+        if atributo == "Número de dormitorios":
+            for casa in self.casas:
+                if casa.numero_dormitorios >= valor:
+                    for paquete in casa.paquetes():
+                        paquetes.append(paquete)
+        if atributo == "Número de baños":
+            for casa in self.casas:
+                if casa.numero_banos >= valor:
+                    for paquete in casa.paquetes():
+                        paquetes.append(paquete)
+        if atributo == "Numero de cocinas":
+            for casa in self.casas:
+                if casa.numero_cocinas >= valor:
+                    for paquete in casa.paquetes():
+                        paquetes.append(paquete)
