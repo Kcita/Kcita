@@ -185,7 +185,7 @@ class Kcita:
                 break
 
         if not busqueda_valida:
-            return "Ninguna casa coincide con este código o la casa fue dada de baja."
+            return []
         else:
             paquetes_disponibles = []
             for paquete_de_casa in casaRef.paquetes_de_casa:
@@ -217,10 +217,7 @@ class Kcita:
                     if paquete_esta_disponible:
                         paquetes_disponibles.append(paquete_de_dormitorio)
 
-        if len(paquetes_disponibles) == 0:
-            return "No se encontraron paquetes disponibles con esa fecha. Intente cambiando de fecha o número de noches"
-        else:
-            return paquetes_disponibles
+        return paquetes_disponibles
 
     def busqueda_por_atributo(atributo, valor):
 
