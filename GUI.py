@@ -223,12 +223,16 @@ def casa_index():
         Label(casa_index_screen, text="Garajes").grid(row=0, column=7)
         j = 1
         for casa in propietario.casas:
-            Label(casa_index_screen, text=str(casa.codigo_casa)).grid(row=j, column=0)
-            Label(casa_index_screen, text=casa.departamento.nombre).grid(row=j, column=1)
-            Label(casa_index_screen, text=casa.direccion).grid(row=j, column=2)
-            Label(casa_index_screen, text=casa.numero_dormitorios).grid(row=j, column=3)
-            Label(casa_index_screen, text=str(casa.numero_banos)).grid(row=j, column=3)
-            j += 1
+            if not casa.dado_de_baja:
+                Label(casa_index_screen, text=str(casa.codigo_casa)).grid(row=j, column=0)
+                Label(casa_index_screen, text=casa.departamento.nombre).grid(row=j, column=1)
+                Label(casa_index_screen, text=casa.direccion).grid(row=j, column=2)
+                Label(casa_index_screen, text=casa.numero_dormitorios).grid(row=j, column=3)
+                Label(casa_index_screen, text=casa.numero_banos).grid(row=j, column=3)
+                Label(casa_index_screen, text=casa.numero_cocinas).grid(row=j, column=3)
+                Label(casa_index_screen, text=casa.numero_comedores).grid(row=j, column=3)
+                Label(casa_index_screen, text=casa.numero_plazas_garaje).grid(row=j, column=3)
+                j += 1
     else:
         Label(casa_index_screen, text="Tiene que iniciar sesión para poder ver sus casas.").pack()
 
@@ -247,7 +251,14 @@ def casa_destroy():
     pass
 
 def casa_delete():
-    pass
+    """Presenta un formulario para borrar una casa"""
+    global casa_delete_screen
+    casa_delete_screen = Tk()
+    casa_delete_screen.title("Dar de baja una casa")
+
+    global casa_delete_entry
+    Label(casa_delete_screen, text="Introduzca el codigo de la casa que desea dar de baja.")
+    Button()
 
 def reserva_create():
     pass
