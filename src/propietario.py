@@ -21,6 +21,7 @@ class Propietario:
         - inicio_sesion
         - cerrar_sesion
         - paquetes
+        - reservas
     """
 
     def __init__(self, kcita, usuario, password, nombre):
@@ -81,6 +82,16 @@ class Propietario:
 
         return casas_disponibles
 
+    def paquetes(self):
+        """Devuelve todos los paquetes de un propietario"""
+        paquetes = []
+        for casa in self.casas:
+            for paquete_de_casa in self.paquetes_de_casa:
+                paquetes.append(paquete_de_casa)
+            for dormitorio in self.dormitorios:
+                for paquete_de_dormitorio in self.paquetes_de_dormitorios:
+                    paquetes.append(paquete_de_dormitorio)
+
     def paquetes_disponibles(self):
         """Devuelve todos los paquetes que puso este usuario en el sistema"""
         paquetes_disponibles = []
@@ -91,3 +102,8 @@ class Propietario:
                 for paquete_de_dormitorio in dormitorio.paquetes_de_dormitorio:
                     paquetes_disponibles.append(paquete_de_dormitorio)
         return paquetes_disponibles
+
+    def reservas(self):
+        """Devuelve todas las reservas que hicieron los clientes a un propietario"""
+        reservas = []
+        self.pa
