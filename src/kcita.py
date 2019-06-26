@@ -20,6 +20,7 @@ class Kcita:
         - paquetes
         - nombres_de_usuarios_ocupados
         - iniciar_sesion
+        - propietario_logeado
     """
 
     def __init__(self, nombre):
@@ -219,7 +220,7 @@ class Kcita:
 
         return paquetes_disponibles
 
-    def busqueda_por_atributo(atributo, valor):
+    def busqueda_por_atributo(self, atributo, valor):
 
         """Recibe un atributo de la casa y su valor. Devuelve los paquetes que cumplen con este atributo"""
 
@@ -240,3 +241,10 @@ class Kcita:
                 if casa.numero_cocinas >= valor:
                     for paquete in casa.paquetes():
                         paquetes.append(paquete)
+
+    def propietario_logeado(self):
+
+        """Busca qué propietario está logeado"""
+        for propietario in self.propietarios:
+            if propietario.sesion_iniciada:
+                return propietario
