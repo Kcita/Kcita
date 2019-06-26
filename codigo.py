@@ -10,10 +10,15 @@ from src.reserva import Reserva
 from src.pago import Pago
 
 import datetime
+from tkinter import *
+from tkinter import ttk
 
 from tqdm import tqdm
 from pyfiglet import figlet_format
 import time
+
+
+
 
 def CLI():
 
@@ -34,6 +39,7 @@ def CLI():
             for i in tqdm(range(100)):
                 time.sleep(1)
         break
+
 
 def test():
 
@@ -118,4 +124,4 @@ def test():
     #print(kcita.propietario_signed_in("usuario3", "12345"))
     #print(kcita.propietario_signed_in("usuario1", "345"))
 
-test()
+main_screen()
