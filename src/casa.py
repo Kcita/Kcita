@@ -30,7 +30,7 @@ class Casa:
         - paquetes
     """
 
-    def __init__(self,propietario, departamento, direccion = "", numero_dormitorios = 0, numero_banos = 0, numero_cocinas = 0, numero_comedores = 0, numero_plazas_garaje = 0, descripcion_general = ""):
+    def __init__(self, propietario, departamento, direccion = "", numero_dormitorios = 0, numero_banos = 0, numero_cocinas = 0, numero_comedores = 0, numero_plazas_garaje = 0, descripcion_general = ""):
         """Crea una casa"""
         #La variable codigo casa es una variable global
         global codigo_casa
@@ -52,8 +52,6 @@ class Casa:
         self.descripcion_general = descripcion_general
         #Una casa tiene varios dormitorios
         self.dormitorios = []
-        self.departamento = departamento
-        departamento.agregar_casa(self)
         #Una casa tiene varios paquetes
         self.paquetes_de_casa = []
         #Una casa es válida si cuenta con al menos una cocina, 3 habitaciones y 2 baños
@@ -65,6 +63,9 @@ class Casa:
     def __str__(self):
         """Devuelve una representación de caractéres de self"""
         return "Codigo de casa" + str(self.codigo_casa)+ ", " + "la direccion es " + str(self.direccion)+ ", " + "el numero de dormitorios es "+ str(self.numero_dormitorios)+ ", " + "el numero de cocinas es " + str(self.numero_cocinas) + ", "+ "el numero de comedores es " + str(self.numero_comedores)+ " y el numero de baños es "+str(self.numero_banos)
+
+    def setDireccion(self, direccion):
+        self.direccion = direccion
 
     def agregar_dormitorio(self, dormitorio):
         """Agrega un dormitorio a la casa"""
