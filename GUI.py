@@ -24,6 +24,7 @@ departamento2 = Departamento(kcita, "Arequipa")
 cliente1 = Cliente(kcita, "Renato Palomino", "938618324", "r.palomino@gmail.com")
 cliente2 = Cliente(kcita, "Sebastian Ramos", "978762123", "s.ramos@gmail.com")
 cliente3 = Cliente(kcita, "Estefania Ortega", "938711189", "e.ortega@hotmail.com")
+cliente4= Cliente(kcita,"Lucio Lazarte","986764554","lucio45@gmail.com")
 propietario1 = Propietario(kcita, "renato", "1234", "Renato Palomino")
 propietario2 = Propietario(kcita, "paolo", "1234", "Paolo Bejarano")
 casa1 = Casa(propietario1, departamento1, "Av. Salaverry 2020, Jesus María", 3, 2, 2, 1, 1)
@@ -39,8 +40,23 @@ dormitorio31 = Dormitorio(casa3, 1, 2)
 dormitorio32 = Dormitorio(casa3, 1, 2)
 dormitorio33 = Dormitorio(casa3, 1, 2)
 
-#Datos de ejemplo
-propietario1 = Propietario(kcita, "root", "1234", "Root de prueba")
+    #PAQUETES CASA
+paqueteporcasa=PaqueteCasa(casa1, 300, 4, "se alquila casa a 300 soles la nocheminimo de noches 4" )
+paqueteporcasa1=PaqueteCasa(casa2, 400,3,"se alcuila casa a 350 soles, minimo de noches 3")
+paqueteporcasa2=PaqueteCasa(casa3, 280,3,"se alquila casa a 300 soles, minimo de noches 3")
+
+    #PAQUETES dormitorio
+paquetepordormitorio=PaqueteDormitorio(dormitorio11,50, 2,"se alquila dormitorio a 50 soles la noche, minimo de noches 2")
+paquetepordormitorio1=PaqueteDormitorio(dormitorio12, 60,2,"se alquila dormitorio a 60 soles la noche, minimo de noches 2")
+
+paquetepordormitorio3=PaqueteDormitorio(dormitorio21,100,2,"se alquila dormitorio a 100 soles la noche,minimo de noches 2")
+
+    #reservas
+reserva1=Reserva(cliente1,paqueteporcasa,datetime.date(2019,3,24),datetime.date(2019,3,30),datetime.date(2019,4,4))
+reserva2=Reserva(cliente2,paqueteporcasa1,datetime.date(2019,4,15),datetime.date(2019,4,30),datetime.date(2019,5,5))
+reserva3=Reserva(cliente3,paqueteporcasa,datetime.date(2019,3,24),datetime.date(2019,3,30),datetime.date(2019,4,4))
+reserva4=Reserva(cliente4,paquetepordormitorio,datetime.date(2019,5,1),datetime.date(2019,5,5),datetime.date(2019,5,9))
+reserva5=Reserva(cliente1,paquetepordormitorio3,datetime.date(2019,6,14),datetime.date(2019,6,20),datetime.date(2019,6,25))
 
 def sign_in_verify():
     usuario = usuario_verify.get()
@@ -164,7 +180,7 @@ def casa_new():
     global codigo_departamento_entry
     codigo_departamento_entry = Entry(casa_new_screen, textvariable="codigo_departamento_casa_new")
     codigo_departamento_entry.pack()
-    #Button(casa_new_screen, text= "Ver departamentos disponibles", height=1, width=20, command=codigos_departamentos_disponibles).pack()
+    Button(casa_new_screen, text= "Ver departamentos disponibles", height=1, width=20, command=codigos_departamentos_disponibles).pack()
 
     #direccion
     var1 = Label(casa_new_screen, text="Dirección").pack()
@@ -228,10 +244,10 @@ def casa_index():
                 Label(casa_index_screen, text=casa.departamento.nombre).grid(row=j, column=1)
                 Label(casa_index_screen, text=casa.direccion).grid(row=j, column=2)
                 Label(casa_index_screen, text=casa.numero_dormitorios).grid(row=j, column=3)
-                Label(casa_index_screen, text=casa.numero_banos).grid(row=j, column=3)
-                Label(casa_index_screen, text=casa.numero_cocinas).grid(row=j, column=3)
-                Label(casa_index_screen, text=casa.numero_comedores).grid(row=j, column=3)
-                Label(casa_index_screen, text=casa.numero_plazas_garaje).grid(row=j, column=3)
+                Label(casa_index_screen, text=casa.numero_banos).grid(row=j, column=4)
+                Label(casa_index_screen, text=casa.numero_cocinas).grid(row=j, column=5)
+                Label(casa_index_screen, text=casa.numero_comedores).grid(row=j, column=6)
+                Label(casa_index_screen, text=casa.numero_plazas_garaje).grid(row=j, column=7)
                 j += 1
     else:
         Label(casa_index_screen, text="Tiene que iniciar sesión para poder ver sus casas.").pack()
@@ -258,7 +274,7 @@ def casa_delete():
 
     global casa_delete_entry
     Label(casa_delete_screen, text="Introduzca el codigo de la casa que desea dar de baja.")
-    Button()
+    #Button()
 
 def reserva_create():
     pass
@@ -280,10 +296,18 @@ def reserva_new():
 
 
 def reserva_destroy():
-    pass
+    reserva = int(codigo_reserva_entry.get())
 
 def reserva_delete():
-    global reserva_new_screen
+    global reserva_delete_screen
+    reserva_delete_screen = Tk()
+    reserva_delete_screen.title("Anular reserva")
+
+    Label(reserva_delete_screen, text="Introduzca el código de la reserva que desea añadir:")
+    global codigo_reserva_entry
+    codigo_reserva_entry = Entry(reserva_delete_screen, text="")
+    Button(codigo_reserva_entry, text= "Anular", height=2, width=25, command=busqueda1_result).pack()
+
 
 def reserva_index_propietario():
 
@@ -320,13 +344,21 @@ def reserva_index_propietario():
             i = i + 1
 
 def reserva_index_cliente():
-    pass
+
+    reserva_index_cliente_screen = Tk()
+    reserva_index_cliente_screen.title("Mis reservas")
+
+
+
+    #for reserva in cliente.reservas
+
 
 def pago_create():
     pass
 
 def pago_new():
-    pass
+    pago_new_screen = Tk()
+    pago_new_screen.title("Nuevo pago")
 
 def busqueda1_result():
 
@@ -363,19 +395,16 @@ def busqueda1_result():
             i += 1
 
 
-
-
 def busqueda1_form():
     busqueda1_form_screen = Tk()
     busqueda1_form_screen.title("Búsqueda por departamento")
 
     global codigo_departamento_entry
 
-    codigo_departamento_entry = Entry(busqueda1_form_screen, textvariable="codigo_departamento").pack()
+    codigo_departamento_entry = Entry(busqueda1_form_screen, textvariable="codigo_departamento")
     codigo_departamento_entry.pack()
     Button(busqueda1_form_screen, text= "Ver departamentos disponibles", height=1, width=25, command=codigos_departamentos_disponibles).pack()
     Button(busqueda1_form_screen, text= "Buscar", height=2, width=25, command=busqueda1_result).pack()
-
 
 
 def main_screen():
@@ -386,7 +415,7 @@ def main_screen():
     titulo_cliente = Label(main_screen, text = "Cliente",height=1, width=15 , font=("Open Sans", 35, "bold"))
     titulo_cliente.place(x=150, y=10)
 
-    Label(main_screen, text = "Búsqueda de alquileres",height=1, font=("Open Sans", 30, "bold")).place(x=25, y=100)
+    Label(main_screen, text = "Búsqueda de alquileres",height=1, font=("Open Sans", 35)).place(x=25, y=100)
 
     Button(main_screen, text = "Búsqueda por departamento", height=2, width=25, command = busqueda1_form).place(x=200, y=150)
 
@@ -394,7 +423,7 @@ def main_screen():
 
     #Button(main_screen, text = "Búsqueda 3", height=2, width=25).place(x=200, y=150)
 
-    titulo_propietario = Label(main_screen, text = "Propietario",height=1, width=15 , font="Times 40")
+    titulo_propietario = Label(main_screen, text = "Propietario",height=1, width=15 , font=("Open Sans", 35 , "bold"))
     titulo_propietario.place(x=750, y=10)
 
     #Boton de logeo de propietario
@@ -407,29 +436,29 @@ def main_screen():
     log_out = Button(main_screen, text = "Cerrar sesión", height=1, width=15, command=cerrar_sesion)
     log_out.place(x=1000, y=75)
 
-    Label(main_screen, text = "Casas",height=1, font="Times 40").place(x=675, y=100)
+    Label(main_screen, text = "Casas",height=1, font=("Open Sans", 35)).place(x=675, y=100)
 
     Button(main_screen, text = "Agregar casa", height=1, width=15, command = casa_new).place(x=800, y=150)
     Button(main_screen, text = "Ver casas", height=1, width=15, command = casa_index).place(x=1000, y=150)
     casa_edit = Button(main_screen, text = "Editar casa", height=1, width=15).place(x=800, y=175)
     casa_delete = Button(main_screen, text = "Dar de baja", height=1, width=15).place(x=1000, y=175)
 
-    Label(main_screen, text = "Paquetes",height=1, font="Times 40").place(x=675, y=200)
+    Label(main_screen, text = "Paquetes",height=1, font=("Open Sans", 35)).place(x=675, y=200)
 
     paquete_new = Button(main_screen, text = "Agregar paquete", height=1, width=15).place(x=800, y=250)
-    paquete_index = Button(main_screen, text = "Ver paquetes", height=1, width=15).place(x=1000, y=250)
+    Button(main_screen, text = "Ver paquetes", height=1, width=15, command = paquete_index_propietario).place(x=1000, y=250)
     paquete_edit = Button(main_screen, text = "Editar paquete", height=1, width=15).place(x=800, y=275)
     paquete_delete = Button(main_screen, text = "Dar de baja", height=1, width=15).place(x=1000, y=275)
 
-    Label(main_screen, text = "Reservas",height=1, font=("Open Sans", 35, "bold")).place(x=675, y=300)
+    Label(main_screen, text = "Reservas",height=1, font=("Open Sans", 35)).place(x=675, y=300)
 
-    reservas_index = Button(main_screen, text = "Ver reservas", height=1, width=15).place(x=800, y=350)
-    reserva_destroy = Button(main_screen, text = "Anular reservas", height=1, width=15).place(x=1000, y=350)
+    reservas_index = Button(main_screen, text = "Ver reservas", height=1, width=15, command = reserva_index_propietario).place(x=800, y=350)
+    reserva_destroy = Button(main_screen, text = "Anular reservas", height=1, width=15, command = reserva_delete).place(x=1000, y=350)
 
-    Label(main_screen, text = "Pagos",height=1, font="Times 40").place(x=675, y=375)
+    Label(main_screen, text = "Pagos",height=1, font=("Open Sans", 35)).place(x=675, y=375)
 
-    pagos_new = Button(main_screen, text = "Agregar pago", height=1, width=15).place(x=800, y=400)
-    pagos_index = Button(main_screen, text = "Ver pagos", height=1, width=15).place(x=1000, y=425)
+    Button(main_screen, text = "Agregar pago", height=1, width=15, command = pago_new).place(x=800, y=425)
+    Button(main_screen, text = "Ver pagos", height=1, width=15, command = pago_index).place(x=1000, y=425)
 
     main_screen.mainloop()
 
