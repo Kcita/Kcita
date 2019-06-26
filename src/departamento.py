@@ -32,6 +32,9 @@ class Departamento:
         """Devuelve una representación de caractéres de self"""
         return "El codigo de departamento es " + str(self.codigo_departamento)+", el nombres es "+str(self.nombre)
 
+    def getNombre(self):
+        return self.nombre
+
     def agregar_casa(self, casa):
         """Recibe dos objetos: Departamento y Casa. Agregar la casa al atributo casas del Departamento."""
         self.casas.append(casa)
