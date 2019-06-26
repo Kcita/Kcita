@@ -12,6 +12,7 @@ from src.pago import Pago
 import datetime
 from tkinter import *
 from tkinter import ttk
+import time
 
 global main_screen
 
@@ -20,6 +21,9 @@ global main_screen
 kcita = Kcita("Kcita")
 departamento1 = Departamento(kcita, "Lima")
 departamento2 = Departamento(kcita, "Arequipa")
+propietario1 = Propietario(kcita, "renato", "1234", "Renato Palomino")
+casa1 = Casa(propietario1, departamento1, "Av. Salaverry 2020", 3, 2, 1, 1, 1, "Casa en Av. Salaverry")
+dormitorio1 = Dormitorio()
 
 #Datos de ejemplo
 propietario1 = Propietario(kcita, "root", "1234", "Root de prueba")
@@ -33,6 +37,8 @@ def sign_in_verify():
         Label(sign_in_screen, text="Inicio de sesión satisfactorio").pack()
         global propietario
         propietario = kcita.propietario_logeado()
+        time.sleep(2)
+        sign_in_screen.destroy()
     else:
         Label(sign_in_screen, text="Usuario y contraseña no coinciden").pack()
 
@@ -66,6 +72,8 @@ def registrarse():
     password = password_new.get()
 
     nuevo_propietario = Propietario(kcita, usuario, password, nombre)
+    time.sleep(2)
+    sign_up_screen.destroy()
 
 def cerrar_sesion():
     kcita.salir_sesion()
@@ -73,6 +81,7 @@ def cerrar_sesion():
     propietario = None
 
 def sign_up_screen():
+    global sign_up_screen
     sign_up_screen = Tk()
     sign_up_screen.title("Iniciar sesión")
     sign_up_screen.geometry("300x250")
@@ -122,6 +131,9 @@ def casa_create():
     numero_plazas_garaje = int(numero_plazas_garaje_entry.get())
     descripcion_general = descripcion_general_entry.get()
     nueva_casa = Casa(propietario, departamento, direccion, numero_dormitorios, numero_cocinas, numero_banos, numero_plazas_garaje, descripcion_general)
+
+    time.sleep(2)
+    casa_new_screen.destroy()
 
 def casa_new():
 
@@ -227,15 +239,62 @@ def reserva_create():
     pass
 
 def reserva_new():
-    pass
+
+    global reserva_new_screen
+    reserva_new_screen = Tk()
+    reserva_new_screen.title("Nueva reserva")
+
+    Label(reserva_new_screen, text="Introduzca el código del paquete").pack()
+    codigo_paquete_entry = Entry()
+    codigo_paquete_entry.pack()
+    Label(reserva_new_screen, text="Introduzca la fecha de inicio").pack()
+    fecha_de_inicio_de_reserva = Entry()
+    fecha_de_inicio_de_reserva.pack()
+    fecha_de_fin_de_reserva = Entry()
+    fecha_de_fin_de_reserva.pack()
+
 
 def reserva_destroy():
     pass
 
 def reserva_delete():
-    pass
+    global reserva_new_screen
 
-def reserva_index():
+def reserva_index_propietario():
+
+    global reserva_index_propietario
+    reserva_index_propietario = Tk()
+    reserva_index_propietario.title("Mis reservas")
+
+    if len(propietario.reservas()) == 0:
+        Label(reserva_index_propietario, text="Todavía nadie ha hecho una reserva").pack()
+    else:
+        Label(reserva_index_propietario, text="ID").grid(row=0, column=0)
+        Label(reserva_index_propietario, text="ID de paquete").grid(row=0, column=1)
+        Label(reserva_index_propietario, text="Fecha de creacion").grid(row=0, column=2)
+        Label(reserva_index_propietario, text="Fecha de inicio de reserva").grid(row=0, column=3)
+        Label(reserva_index_propietario, text="Fecha de fin de reserva").grid(row=0, column=4)
+        Label(reserva_index_propietario, text="Estado").grid(row=0, column=5)
+        Label(reserva_index_propietario, text="Nombre cliente").grid(row=0, column=6)
+        Label(reserva_index_propietario, text="Celular cliente").grid(row=0, column=7)
+        i = 1
+        for reserva in propietario.reservas:
+            Label(reserva_index_propietario, text=reserva.codigo_reserva).grid(row=i, column=0)
+            Label(reserva_index_propietario, text=reserva.paquete.codigo_paquete).grid(row=i, column=1)
+            Label(reserva_index_propietario, text=reserva.fecha_de_creacion).grid(row=i, column=2)
+            Label(reserva_index_propietario, text=reserva.fecha_de_inicio_de_reserva).grid(row=i, column=3)
+            Label(reserva_index_propietario, text=reserva.fecha_de_fin_de_reserva).grid(row=i, column=4)
+            observacion = ""
+            if reserva.anulado:
+                observacion = "Anulado"
+            elif reserva.adelanto_esta_atrasado():
+                observacion = "Está atrasado"
+            Label(reserva_index_propietario, text=observacion).grid(row=i, column=5)
+            Label(reserva_index_propietario, text=reserva.cliente.nombre).grid(row=i, column=6)
+            Label(reserva_index_propietario, text=reserva.cliente.celular).grid(row=i, column=7)
+            i = i + 1
+
+def reserva_index_cliente():
     pass
 
 def pago_create():
@@ -243,6 +302,56 @@ def pago_create():
 
 def pago_new():
     pass
+
+def busqueda1_result():
+
+    busqueda1_result_screen = Tk()
+    busqueda1_result_screen.title("Resultado de búsqueda")
+
+    codigo_departamento = int(codigo_departamento_entry.get())
+
+    departamento = kcita.busqueda_de_departamento_por_codigo(codigo_departamento)
+
+    if len(departamento.paquetes_disponibles()) == 0:
+        Label(busqueda1_result_screen, text="No se ha encontrado ningún alquiler.").pack()
+    else:
+        Label(busqueda1_result_screen, text="Codigo").grid(row=0, column=0)
+        Label(busqueda1_result_screen, text="Tipo").grid(row=0, column=1)
+        Label(busqueda1_result_screen, text="Precio/dia").grid(row=0, column=2)
+        Label(busqueda1_result_screen, text="Numero de dias").grid(row=0, column=3)
+        Label(busqueda1_result_screen, text="Ubicacion").grid(row=0, column=4)
+        i = 1
+        for paquete in departamento.paquetes_de_casa_disponibles():
+            Label(busqueda1_result_screen, text=paquete.codigo_paquete).grid(row=i, column=0)
+            Label(busqueda1_result_screen, text=paquete.tipo).grid(row=i, column=1)
+            Label(busqueda1_result_screen, text=paquete.precio_por_dia).grid(row=i, column=2)
+            Label(busqueda1_result_screen, text=paquete.numero_de_dias).grid(row=i, column=3)
+            Label(busqueda1_result_screen, text=paquete.casa.direccion).grid(row=i, column=4)
+            i += 1
+        i = 1
+        for paquete in departamento.paquetes_de_dormitorio_disponibles():
+            Label(busqueda1_result_screen, text=paquete.codigo_paquete).grid(row=i, column=0)
+            Label(busqueda1_result_screen, text=paquete.tipo).grid(row=i, column=1)
+            Label(busqueda1_result_screen, text=paquete.precio_por_dia).grid(row=i, column=2)
+            Label(busqueda1_result_screen, text=paquete.numero_de_dias).grid(row=i, column=3)
+            Label(busqueda1_result_screen, text=paquete.dormitorio.casa.direccion).grid(row=i, column=4)
+            i += 1
+
+
+
+
+def busqueda1_form():
+    busqueda1_form_screen = Tk()
+    busqueda1_form_screen.title("Búsqueda por departamento")
+
+    global codigo_departamento_entry
+
+    codigo_departamento_entry = Entry(busqueda1_form_screen, textvariable="codigo_departamento").pack()
+    codigo_departamento_entry.pack()
+    Button(busqueda1_form_screen, text= "Ver departamentos disponibles", height=1, width=25, command=codigos_departamentos_disponibles).pack()
+    Button(busqueda1_form_screen, text= "Buscar", height=2, width=25, command=busqueda1_result).pack()
+
+
 
 def main_screen():
     main_screen = Tk()
@@ -254,11 +363,11 @@ def main_screen():
 
     Label(main_screen, text = "Búsqueda de alquileres",height=1, font=("Open Sans", 30, "bold")).place(x=25, y=100)
 
-    Button(main_screen, text = "Búsqueda por departamento", height=2, width=25).place(x=200, y=150)
+    Button(main_screen, text = "Búsqueda por departamento", height=2, width=25, command = busqueda1_form).place(x=200, y=150)
 
-    Button(main_screen, text = "Búsqueda 2", height=2, width=25).place(x=200, y=150)
+    #Button(main_screen, text = "Búsqueda 2", height=2, width=25).place(x=200, y=150)
 
-    Button(main_screen, text = "Búsqueda 3", height=2, width=25).place(x=200, y=150)
+    #Button(main_screen, text = "Búsqueda 3", height=2, width=25).place(x=200, y=150)
 
     titulo_propietario = Label(main_screen, text = "Propietario",height=1, width=15 , font="Times 40")
     titulo_propietario.place(x=750, y=10)
