@@ -17,8 +17,10 @@ class Propietario:
         - sesion_iniciada: boolean
         -------------------------------------------
         Métodos:
-        - Agregar_casa
-        - Paquetes
+        - agregar_casa
+        - inicio_sesion
+        - cerrar_sesion
+        - paquetes
     """
 
     def __init__(self, kcita, usuario, password, nombre):
@@ -44,7 +46,7 @@ class Propietario:
         kcita.agregar_propietario(self)
         self.sesion_iniciada = False
 
-    def __str__():
+    def __str__(self):
         """Devuelve una representación de caractéres de self"""
         return "el usario es " + str(self.usuario)+", el passwoerd es "+ str(self.password)+", el nombre es "+str(self.nombre)
 
@@ -69,3 +71,23 @@ class Propietario:
     def cerrar_sesion(self):
         """Se cierra la sesión de este propietario"""
         self.sesion_iniciada = False
+
+    def casas_disponibles(self):
+        """Devuelve las casas que no han sido dado de baja"""
+        casas_disponibles = []
+        for casa in self.casas:
+            if not casa.dado_de_baja:
+                casas_disponibles.append(casa)
+
+        return casas_disponibles
+
+    def paquetes_disponibles(self):
+        """Devuelve todos los paquetes que puso este usuario en el sistema"""
+        paquetes_disponibles = []
+        for casa in self.casas_disponibles():
+            for paquete_de_casa in casa.paquetes_de_casa:
+                paquetes_disponibles.append(paquete_de_casa)
+            for dormitorio in casa.dormitorios:
+                for paquete_de_dormitorio in dormitorio.paquetes_de_dormitorio:
+                    paquetes_disponibles.append(paquete_de_dormitorio)
+        return paquetes_disponibles
