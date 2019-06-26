@@ -50,6 +50,18 @@ class Departamento:
                     paquetes.append(paquete_de_dormitorio)
         return paquetes
 
+    def paquetes_de_casa_disponibles(self):
+        paquetes_de_casa_disponibles = []
+        for casa in self.casas:
+            if not casa.dado_de_baja:
+                for paquete_de_casa in casa.paquetes_de_casa:
+                    paquetes_de_casa_disponibles.append(paquete_de_casa)
+        return paquetes_de_casa_disponibles
+
+    def paquetes_de_dormitorio_disponibles(self):
+        paquetes_de_dormitorio_disponibles = []
+
+
     def paquetes_disponibles(self):
         """Recibe el objeto Departamento y devuelve un array con todos los paquetes disponibles en este departamento"""
         paquetes_disponibles = []
