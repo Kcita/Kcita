@@ -10,11 +10,6 @@ class Cocina:
         - casa: object
         - tiene_lavavajillas: boolean
         - tiene_lavadoras: boolean
-        ---------------------------------------------
-        Métodos:
-        - agregar_paquete_dormitorio(paquete_de_dormitorio)
-        - reservas
-        - propietario
     """
 
     def __init__(self, casa, tiene_lavavajillas, tiene_lavadoras):
