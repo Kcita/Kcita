@@ -106,4 +106,5 @@ class Propietario:
     def reservas(self):
         """Devuelve todas las reservas que hicieron los clientes a un propietario"""
         reservas = []
-        self.pa
+        for paquete in self.paquetes():
+            reservas.append(paquete)
